@@ -46,7 +46,7 @@ function initialPrompts() {
                 },
                 {
                     name: 'Add Department',
-                    value: 'ADD_DEPARTMENT',
+                    value: 'ADD_DEPARTMENTS',
                 },
 
                 {
@@ -85,7 +85,7 @@ function initialPrompts() {
                 viewDepartments();
                 break;
             case 'ADD_DEPARTMENTS':
-                addDepartments();
+                addDepartment();
                 break;
             case 'REMOVE_DEPARTMENT':
                 removeDepartment();
@@ -290,11 +290,55 @@ function viewDepartments() {
     console.error("Error retrieving departments:", error);
 });
 }
-function addDepartments() {
+function addDepartment() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'department_name',
+            message: 'What is the name of the new department?',
+            validate: input => input ? true : "Department name cannot be empty."
+        }
+    ])
+    .then((res) => {
+        const department_name = res.department_name;
 
+        return db.addDepartment({ department_name });
+    })
+    .then(() => {
+        console.log("Department added successfully!");
+        initialPrompts();
+    })
+    .catch(error => {
+        console.error("error adding department:", error);
+        initialPrompts();
+    })
 }
 function removeDepartment() {
+    db.findAllDepartments()
+    .then(({ rows }) => {
+        const departments = rows.map(department => department.name);
+        console.log("Available Departments:", departments);
+        initialPrompts();
 
+return inquirer.prompt([
+{
+    type: 'list',
+    name: 'departmentId',
+    message: 'Which department would you like to remove?',
+    choices: departments
+}
+]);
+})
+.then((res) => {
+const { departmentId } = res;
+return db.removeDepartment(departmentId)})
+.then(() => {
+    console.log("Department removed successfully!");
+    initialPrompts();
+})
+.catch((error) => {
+    console.error('Error removing department:', error);
+});
 }
 function quit() {
 

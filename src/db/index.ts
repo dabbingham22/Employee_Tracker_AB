@@ -30,23 +30,40 @@ export default class Db {
         return this.query("SELECT role.id, role.title, department.name AS department, role.salary FROM role LEFT JOIN department on role.department_id = department.id;"
         );
     }
+
     removeEmployee(employeeId: any) {
         const sql = "DELETE FROM employee WHERE id = $1";
         return this.query(sql, [employeeId]);
     }
+
     addRole(role: any) {
         const {role_title, salary, department_id} = role;
         return this.query("INSERT INTO role (title, salary, department_id) VALUES ($1, $2, $3)",
             [role_title, salary, department_id]
         );
     }
+
     removeRole(roleId: any) {
         const sql = "DELETE FROM role WHERE id =$1";
         return this.query(sql, [roleId])
     }
+
     findAllDepartments() {
         return this.query("SELECT department.name FROM department;" 
         );
         
     }
+
+    addDepartment(department: any) {
+        const { department_name } = department;
+        return this.query("INSERT INTO department(name) VALUES ($1)", 
+            [department_name]
+        );
+        
+    }
+
+    removeDepartment(departmentId: any) {
+        const sql = "DELETE FROM department WHERE id =$1";
+        return this.query(sql, [departmentId])
+    };
 }

@@ -38,4 +38,13 @@ export default class Db {
     findAllDepartments() {
         return this.query("SELECT department.name FROM department;");
     }
+    addDepartment(department) {
+        const { department_name } = department;
+        return this.query("INSERT INTO department(name) VALUES ($1)", [department_name]);
+    }
+    removeDepartment(departmentId) {
+        const sql = "DELETE FROM department WHERE id =$1";
+        return this.query(sql, [departmentId]);
+    }
+    ;
 }
