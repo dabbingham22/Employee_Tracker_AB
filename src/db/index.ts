@@ -44,4 +44,9 @@ export default class Db {
         const sql = "DELETE FROM role WHERE id =$1";
         return this.query(sql, [roleId])
     }
+    findAllDepartments() {
+        return this.query("SELECT department.name FROM department;" 
+        );
+        
+    }
 }

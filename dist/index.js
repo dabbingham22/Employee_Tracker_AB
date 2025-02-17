@@ -39,7 +39,7 @@ function initialPrompts() {
                 },
                 {
                     name: 'View All Departments',
-                    value: 'VIEW_ALL_DEPARTMENTS',
+                    value: 'VIEW_DEPARTMENTS',
                 },
                 {
                     name: 'Add Department',
@@ -269,6 +269,15 @@ function removeRole() {
     });
 }
 function viewDepartments() {
+    db.findAllDepartments()
+        .then(({ rows }) => {
+        const departments = rows.map(department => department.name);
+        console.log("Available Departments:", departments);
+        initialPrompts();
+    })
+        .catch(error => {
+        console.error("Error retrieving departments:", error);
+    });
 }
 function addDepartments() {
 }
