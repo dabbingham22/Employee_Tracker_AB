@@ -201,6 +201,15 @@ function removeEmployee() {
         .catch(err => console.error("Error removing employee:", err));
 }
 function viewRoles() {
+    db.findAllRoles()
+        .then(({ rows }) => {
+        const roles = rows.map(role => role.title);
+        console.log("Available Roles:", roles);
+        initialPrompts();
+    })
+        .catch(error => {
+        console.error("Error fetching roles:", error);
+    });
 }
 function addRole() {
 }
