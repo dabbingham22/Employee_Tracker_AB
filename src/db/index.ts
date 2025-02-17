@@ -40,4 +40,8 @@ export default class Db {
             [role_title, salary, department_id]
         );
     }
+    removeRole(roleId: any) {
+        const sql = "DELETE FROM role WHERE id =$1";
+        return this.query(sql, [roleId])
+    }
 }

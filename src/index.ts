@@ -252,7 +252,32 @@ function addRole() {
     });
 }
 function removeRole() {
+    db.findAllRoles()
+    .then(({ rows }) => {
+        const roles = rows.map(role => ({
+            name: role.title,
+            value: role.id
+}));
 
+return inquirer.prompt([
+{
+    type: 'list',
+    name: 'roleId',
+    message: 'Which role would you like to remove?',
+    choices: roles
+}
+]);
+})
+.then((res) => {
+const { roleId } = res;
+return db.removeRole(roleId)})
+.then(() => {
+    console.log("Role removed successfully!");
+    initialPrompts();
+})
+.catch((error) => {
+    console.error('Error removing role:', error);
+});
 }
 function viewDepartments() {
 
