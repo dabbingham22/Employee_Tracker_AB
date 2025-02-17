@@ -212,6 +212,33 @@ function viewRoles() {
     });
 }
 function addRole() {
+    inquirer.prompt([
+        {
+            name: 'role_title',
+            message: 'What is the name of the role?',
+        },
+        {
+            name: 'salary',
+            message: 'What is the salary for this role?',
+            validate: (input) => isNaN(input) ? "Please enter a valid number" : true
+        },
+        {
+            name: 'department_id',
+            message: 'Enter the department ID for this role:',
+            validate: (input) => isNaN(input) ? "Please enter a valid department ID" : true
+        }
+    ])
+        .then((res) => {
+        const { role_title, salary, department_id } = res;
+        return db.addRole({ role_title, salary, department_id });
+    })
+        .then(() => {
+        console.log("New role added successfully!");
+        initialPrompts();
+    })
+        .catch((error) => {
+        console.error("Error adding role:", error);
+    });
 }
 function removeRole() {
 }

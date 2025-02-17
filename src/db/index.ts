@@ -34,4 +34,10 @@ export default class Db {
         const sql = "DELETE FROM employee WHERE id = $1";
         return this.query(sql, [employeeId]);
     }
+    addRole(role: any) {
+        const {role_title, salary, department_id} = role;
+        return this.query("INSERT INTO role (title, salary, department_id) VALUES ($1, $2, $3)",
+            [role_title, salary, department_id]
+        );
+    }
 }
