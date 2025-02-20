@@ -1,89 +1,91 @@
 import inquirer from "inquirer";
-import Db from './db/index.js';
+import Db from "./db/index.js";
 const db = new Db();
 initialPrompts();
 function initialPrompts() {
-    inquirer.prompt([
+    inquirer
+        .prompt([
         {
-            type: 'list',
-            name: 'choice',
-            message: 'What would you like to do?',
+            type: "list",
+            name: "choice",
+            message: "What would you like to do?",
             choices: [
                 {
-                    name: 'View all employees',
-                    value: 'VIEW_EMPLOYEES',
+                    name: "View all employees",
+                    value: "VIEW_EMPLOYEES",
                 },
                 {
-                    name: 'Add Employee',
-                    value: 'ADD_EMPLOYEE',
+                    name: "Add Employee",
+                    value: "ADD_EMPLOYEE",
                 },
                 {
-                    name: 'Remove Employee',
-                    value: 'REMOVE_EMPLOYEE',
+                    name: "Remove Employee",
+                    value: "REMOVE_EMPLOYEE",
                 },
                 {
-                    name: 'Update Employee Role',
-                    value: 'UPDATE_EMPLOYEE_ROLE',
+                    name: "Update Employee Role",
+                    value: "UPDATE_EMPLOYEE_ROLE",
                 },
                 {
-                    name: 'View All Roles',
-                    value: 'VIEW_ROLES',
+                    name: "View All Roles",
+                    value: "VIEW_ROLES",
                 },
                 {
-                    name: 'Add Role',
-                    value: 'ADD_ROLE',
+                    name: "Add Role",
+                    value: "ADD_ROLE",
                 },
                 {
-                    name: 'Remove Role',
-                    value: 'REMOVE_ROLE',
+                    name: "Remove Role",
+                    value: "REMOVE_ROLE",
                 },
                 {
-                    name: 'View All Departments',
-                    value: 'VIEW_DEPARTMENTS',
+                    name: "View All Departments",
+                    value: "VIEW_DEPARTMENTS",
                 },
                 {
-                    name: 'Add Department',
-                    value: 'ADD_DEPARTMENTS',
+                    name: "Add Department",
+                    value: "ADD_DEPARTMENTS",
                 },
                 {
-                    name: 'Remove Department',
-                    value: 'REMOVE_DEPARTMENT',
+                    name: "Remove Department",
+                    value: "REMOVE_DEPARTMENT",
                 },
                 {
-                    name: 'Quit',
-                    value: 'QUIT',
+                    name: "Quit",
+                    value: "QUIT",
                 },
-            ]
-        }
-    ]).then((res) => {
+            ],
+        },
+    ])
+        .then((res) => {
         const choice = res.choice;
-        console.log('choice', choice);
+        console.log("choice", choice);
         switch (choice) {
-            case 'VIEW_EMPLOYEES':
+            case "VIEW_EMPLOYEES":
                 viewEmployeees();
                 break;
-            case 'ADD_EMPLOYEE':
+            case "ADD_EMPLOYEE":
                 addEmployee();
                 break;
-            case 'REMOVE_EMPLOYEE':
+            case "REMOVE_EMPLOYEE":
                 removeEmployee();
                 break;
-            case 'VIEW_ROLES':
+            case "VIEW_ROLES":
                 viewRoles();
                 break;
-            case 'ADD_ROLE':
+            case "ADD_ROLE":
                 addRole();
                 break;
-            case 'REMOVE_ROLE':
+            case "REMOVE_ROLE":
                 removeRole();
                 break;
-            case 'VIEW_DEPARTMENTS':
+            case "VIEW_DEPARTMENTS":
                 viewDepartments();
                 break;
-            case 'ADD_DEPARTMENTS':
+            case "ADD_DEPARTMENTS":
                 addDepartment();
                 break;
-            case 'REMOVE_DEPARTMENT':
+            case "REMOVE_DEPARTMENT":
                 removeDepartment();
                 break;
             default:
@@ -101,15 +103,16 @@ function viewEmployeees() {
         .then(() => initialPrompts());
 }
 function addEmployee() {
-    inquirer.prompt([
+    inquirer
+        .prompt([
         {
-            name: 'first_name',
-            message: 'What is the employee\'s first_name',
+            name: "first_name",
+            message: "What is the employee's first_name",
         },
         {
-            name: 'last_name',
-            message: 'What is the employee\'s last_name',
-        }
+            name: "last_name",
+            message: "What is the employee's last_name",
+        },
     ])
         .then((res) => {
         const firstName = res.first_name;
@@ -124,14 +127,16 @@ function addEmployee() {
                     value: id,
                 };
             });
-            inquirer.prompt([
+            inquirer
+                .prompt([
                 {
-                    type: 'list',
-                    name: 'roleId',
-                    message: 'What is the employee\s role?',
-                    choices: roleChoices
-                }
-            ]).then((res) => {
+                    type: "list",
+                    name: "roleId",
+                    message: "What is the employees role?",
+                    choices: roleChoices,
+                },
+            ])
+                .then((res) => {
                 const roleId = res.roleId;
                 db.findAllEmployees().then((res) => {
                     const employees = res?.rows;
@@ -145,13 +150,14 @@ function addEmployee() {
                         };
                     });
                     managerChoices.unshift({ name: "None", value: null });
-                    inquirer.prompt([
+                    inquirer
+                        .prompt([
                         {
-                            type: 'list',
-                            name: 'managerId',
-                            message: 'Who is the employees manager?',
+                            type: "list",
+                            name: "managerId",
+                            message: "Who is the employees manager?",
                             choices: managerChoices,
-                        }
+                        },
                     ])
                         .then((res) => {
                         const employee = {
@@ -161,9 +167,11 @@ function addEmployee() {
                             role_id: roleId,
                         };
                         db.addEmployee(employee);
-                    }).then(() => {
+                    })
+                        .then(() => {
                         console.log(`Added ${firstName} ${lastName} to the database`);
-                    }).then(() => {
+                    })
+                        .then(() => {
                         initialPrompts();
                     });
                 });
@@ -175,7 +183,7 @@ function removeEmployee() {
     // find all the employees
     db.findAllEmployees()
         .then(({ rows }) => {
-        const employees = rows.map(employee => ({
+        const employees = rows.map((employee) => ({
             name: `${employee.first_name} ${employee.last_name}`,
             value: employee.id,
         }));
@@ -183,50 +191,50 @@ function removeEmployee() {
         // create a new prompt to choose which employee to remove
         return inquirer.prompt([
             {
-                type: 'list',
-                name: 'employeeId',
-                message: 'Which employee do you want to remove?',
-                choices: employees
-            }
+                type: "list",
+                name: "employeeId",
+                message: "Which employee do you want to remove?",
+                choices: employees,
+            },
         ]);
     })
         // then run the removeEmployee method
         .then(({ employeeId }) => {
-        return db.removeEmployee(employeeId)
-            .then(() => {
-            console.log('Employee removed successfully.');
+        return db.removeEmployee(employeeId).then(() => {
+            console.log("Employee removed successfully.");
             initialPrompts();
         });
     })
-        .catch(err => console.error("Error removing employee:", err));
+        .catch((err) => console.error("Error removing employee:", err));
 }
 function viewRoles() {
     db.findAllRoles()
         .then(({ rows }) => {
-        const roles = rows.map(role => role.title);
+        const roles = rows.map((role) => role.title);
         console.log("Available Roles:", roles);
         initialPrompts();
     })
-        .catch(error => {
+        .catch((error) => {
         console.error("Error fetching roles:", error);
     });
 }
 function addRole() {
-    inquirer.prompt([
+    inquirer
+        .prompt([
         {
-            name: 'role_title',
-            message: 'What is the name of the role?',
+            name: "role_title",
+            message: "What is the name of the role?",
         },
         {
-            name: 'salary',
-            message: 'What is the salary for this role?',
-            validate: (input) => isNaN(input) ? "Please enter a valid number" : true
+            name: "salary",
+            message: "What is the salary for this role?",
+            validate: (input) => isNaN(input) ? "Please enter a valid number" : true,
         },
         {
-            name: 'department_id',
-            message: 'Enter the department ID for this role:',
-            validate: (input) => isNaN(input) ? "Please enter a valid department ID" : true
-        }
+            name: "department_id",
+            message: "Enter the department ID for this role:",
+            validate: (input) => isNaN(input) ? "Please enter a valid department ID" : true,
+        },
     ])
         .then((res) => {
         const { role_title, salary, department_id } = res;
@@ -243,17 +251,17 @@ function addRole() {
 function removeRole() {
     db.findAllRoles()
         .then(({ rows }) => {
-        const roles = rows.map(role => ({
+        const roles = rows.map((role) => ({
             name: role.title,
-            value: role.id
+            value: role.id,
         }));
         return inquirer.prompt([
             {
-                type: 'list',
-                name: 'roleId',
-                message: 'Which role would you like to remove?',
-                choices: roles
-            }
+                type: "list",
+                name: "roleId",
+                message: "Which role would you like to remove?",
+                choices: roles,
+            },
         ]);
     })
         .then((res) => {
@@ -265,28 +273,29 @@ function removeRole() {
         initialPrompts();
     })
         .catch((error) => {
-        console.error('Error removing role:', error);
+        console.error("Error removing role:", error);
     });
 }
 function viewDepartments() {
     db.findAllDepartments()
         .then(({ rows }) => {
-        const departments = rows.map(department => department.name);
+        const departments = rows.map((department) => department.name);
         console.log("Available Departments:", departments);
         initialPrompts();
     })
-        .catch(error => {
+        .catch((error) => {
         console.error("Error retrieving departments:", error);
     });
 }
 function addDepartment() {
-    inquirer.prompt([
+    inquirer
+        .prompt([
         {
-            type: 'input',
-            name: 'department_name',
-            message: 'What is the name of the new department?',
-            validate: input => input ? true : "Department name cannot be empty."
-        }
+            type: "input",
+            name: "department_name",
+            message: "What is the name of the new department?",
+            validate: (input) => input ? true : "Department name cannot be empty.",
+        },
     ])
         .then((res) => {
         const department_name = res.department_name;
@@ -296,37 +305,38 @@ function addDepartment() {
         console.log("Department added successfully!");
         initialPrompts();
     })
-        .catch(error => {
+        .catch((error) => {
         console.error("error adding department:", error);
         initialPrompts();
     });
 }
 function removeDepartment() {
-    db.findAllDepartments()
-        .then(({ rows }) => {
-        const departments = rows.map(department => department.name);
+    db.findAllDepartments().then(({ rows }) => {
+        const departments = rows.map((department) => ({
+            name: department.name,
+            value: department.id,
+        }));
         console.log("Available Departments:", departments);
-        initialPrompts();
-        return inquirer.prompt([
+        return inquirer
+            .prompt([
             {
-                type: 'list',
-                name: 'departmentId',
-                message: 'Which department would you like to remove?',
-                choices: departments
-            }
-        ]);
-    })
-        .then((res) => {
-        const { departmentId } = res;
-        return db.removeDepartment(departmentId);
-    })
-        .then(() => {
-        console.log("Department removed successfully!");
-        initialPrompts();
-    })
-        .catch((error) => {
-        console.error('Error removing department:', error);
+                type: "list",
+                name: "departmentId",
+                message: "Which department would you like to remove?",
+                choices: departments,
+            },
+        ])
+            .then((res) => {
+            const { departmentId } = res;
+            return db.removeDepartment(departmentId);
+        })
+            .then(() => {
+            console.log("Department removed successfully!");
+            initialPrompts();
+        })
+            .catch((error) => {
+            console.error("Error removing department:", error);
+        });
     });
 }
-function quit() {
-}
+function quit() { }
